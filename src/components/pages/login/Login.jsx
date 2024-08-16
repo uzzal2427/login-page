@@ -1,6 +1,13 @@
 import { Link } from "react-router-dom";
 import img from "../../../assets/img2.webp";
 const Login = () => {
+  const handleLogin = (event) => {
+    event.preventDefault();
+    const form = event.target;
+    const email = form.email.value;
+    const password = form.password.value;
+    console.log(email, password);
+  };
   return (
     <div
       className="hero min-h-screen bg-cover bg-center"
@@ -12,7 +19,7 @@ const Login = () => {
     >
       <div className="hero-content flex-col lg:flex-col w-full">
         <div className="card bg-white w-full max-w-sm shrink-0 shadow-2xl">
-          <form className="card-body">
+          <form onSubmit={handleLogin} className="card-body">
             <div className="text-center lg:text-left text-black">
               <h1 className="text-5xl font-bold">Login now!</h1>
             </div>
