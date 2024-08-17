@@ -1,12 +1,35 @@
 import { Link } from "react-router-dom";
 import img from "../../../assets/img2.webp";
+import { useContext } from "react";
+import { AuthContext } from "../provider/AuthProvider";
+import Swal from "sweetalert2";
+
 const Login = () => {
-  const handleLogin = (event) => {
+  const { handleLogin } = useContext(AuthContext);
+  const handleLoginButton = (event) => {
     event.preventDefault();
     const form = event.target;
     const email = form.email.value;
     const password = form.password.value;
     console.log(email, password);
+    handleLogin(email, password)
+      .then((result) => {
+        const User = result.user;
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Login Successful",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        form.reset();
+        console.log(User);
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode, errorMessage);
+      });
   };
   return (
     <div
@@ -19,7 +42,7 @@ const Login = () => {
     >
       <div className="hero-content flex-col lg:flex-col w-full">
         <div className="card bg-white w-full max-w-sm shrink-0 shadow-2xl">
-          <form onSubmit={handleLogin} className="card-body">
+          <form onSubmit={handleLoginButton} className="card-body">
             <div className="text-center lg:text-left text-black">
               <h1 className="text-5xl font-bold">Login now!</h1>
             </div>
@@ -29,6 +52,7 @@ const Login = () => {
               </label>
               <input
                 type="email"
+                name="email"
                 placeholder="email"
                 className="input bg-black"
                 required
@@ -40,6 +64,7 @@ const Login = () => {
               </label>
               <input
                 type="password"
+                name="password"
                 placeholder="password"
                 className="input bg-black"
                 required

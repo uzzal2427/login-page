@@ -1,14 +1,32 @@
 import { Link } from "react-router-dom";
 import img from "../../../assets/img2.webp";
+import { useContext } from "react";
+import { AuthContext } from "../provider/AuthProvider";
+import { useForm } from "react-hook-form";
+import Swal from "sweetalert2";
 
 const Register = () => {
-  const handleRegister = (event) => {
-    event.preventDefault();
-    const form = event.target;
-    const name = form.name.value;
-    const email = form.email.value;
-    const password = form.password.value;
-    console.log(name, email, password);
+  const { handleRegister } = useContext(AuthContext);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = (data) => {
+    handleRegister(data.email, data.password).then((result) => {
+      const newUser = result.user;
+      reset();
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Registration Successful",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      console.log(newUser);
+    });
   };
   return (
     <div
@@ -21,45 +39,59 @@ const Register = () => {
     >
       <div className="hero-content flex-col lg:flex-col w-full">
         <div className="card bg-white w-full max-w-sm shrink-0 shadow-2xl">
-          <form onSubmit={handleRegister} className="card-body">
+          <form onSubmit={handleSubmit(onSubmit)} className="card-body">
             <div className="text-center lg:text-left text-black">
               <h1 className="text-5xl font-bold">Register now!</h1>
             </div>
             <div className="form-control">
               <label className="label">
-                <span className="label-text font-bold">Name</span>
+                <span className="label-text">Name</span>
               </label>
               <input
-                type="text"
+                {...register("name", { required: true })}
                 name="name"
-                placeholder="name"
+                type="text"
+                placeholder="Name"
                 className="input input-bordered"
-                required
               />
+              {errors.name && (
+                <span className="text-yellow-500">Name is required</span>
+              )}
             </div>
             <div className="form-control">
               <label className="label">
-                <span className="label-text font-bold">Email</span>
+                <span className="label-text">Email</span>
               </label>
               <input
-                type="email"
+                {...register("email", { required: true })}
                 name="email"
+                type="email"
                 placeholder="email"
                 className="input input-bordered"
-                required
               />
+              {errors.email && (
+                <span className="text-yellow-500">Email is required</span>
+              )}
             </div>
             <div className="form-control">
               <label className="label">
-                <span className="label-text font-bold">Password</span>
+                <span className="label-text">Password</span>
               </label>
               <input
-                type="password"
+                {...register("password", { required: true })}
                 name="password"
+                type="password"
                 placeholder="password"
                 className="input input-bordered"
-                required
               />
+              {errors.password && (
+                <span className="text-yellow-500">Password is required</span>
+              )}
+              <label className="label">
+                <a href="#" className="label-text-alt link link-hover">
+                  Forgot password?
+                </a>
+              </label>
             </div>
             <div>
               <p>
@@ -70,7 +102,7 @@ const Register = () => {
               </p>
             </div>
             <div className="form-control mt-6">
-              <button className="btn btn-primary">Login</button>
+              <button className="btn btn-primary">Register</button>
             </div>
           </form>
         </div>
