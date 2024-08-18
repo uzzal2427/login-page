@@ -1,38 +1,34 @@
 import { Link, useNavigate } from "react-router-dom";
 import img from "../../../assets/img2.webp";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../provider/AuthProvider";
-import Swal from "sweetalert2";
 
 const Login = () => {
   const { handleLogin } = useContext(AuthContext);
-  const navigate = useNavigate(); // this will retune user to the home page after successful login
+  const navigate = useNavigate(); // this will return user to the home page after successful login
+  const [error, setError] = useState("");
+
   const handleLoginButton = (event) => {
     event.preventDefault();
     const form = event.target;
     const email = form.email.value;
     const password = form.password.value;
-    console.log(email, password);
+    setError(""); // Clear any previous errors
+
     handleLogin(email, password)
       .then((result) => {
         const User = result.user;
-        Swal.fire({
-          position: "top-end",
-          icon: "success",
-          title: "Login Successful",
-          showConfirmButton: false,
-          timer: 1500,
-        });
         form.reset();
         navigate("/");
         console.log(User);
       })
       .catch((error) => {
-        const errorCode = error.code;
         const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
+        setError(errorMessage); // Set the error message
+        console.log(errorMessage);
       });
   };
+
   return (
     <div
       className="hero min-h-screen bg-cover bg-center"
@@ -71,6 +67,7 @@ const Login = () => {
                 className="input bg-black"
                 required
               />
+              {error && <span className="text-red-500 mt-2">{error}</span>}
             </div>
             <div>
               <p>
