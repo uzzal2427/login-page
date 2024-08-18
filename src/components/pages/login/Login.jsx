@@ -23,7 +23,7 @@ const Login = () => {
       })
       .catch((error) => {
         const errorMessage = error.message;
-        setError(errorMessage); // Set the error message
+        setError("Username Or Password Invalid"); // Set the error message
         console.log(errorMessage);
       });
   };
