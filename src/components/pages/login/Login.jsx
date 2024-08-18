@@ -13,7 +13,6 @@ const Login = () => {
     const form = event.target;
     const email = form.email.value;
     const password = form.password.value;
-    setError(""); // Clear any previous errors
 
     handleLogin(email, password)
       .then((result) => {
