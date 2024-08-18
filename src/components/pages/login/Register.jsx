@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import img from "../../../assets/img2.webp";
 import { useContext } from "react";
 import { AuthContext } from "../provider/AuthProvider";
@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 
 const Register = () => {
   const { handleRegister } = useContext(AuthContext);
+  const navigate = useNavigate(); // this will retune user to the home page after successful register
   const {
     register,
     handleSubmit,
@@ -15,19 +16,42 @@ const Register = () => {
   } = useForm();
 
   const onSubmit = (data) => {
-    handleRegister(data.email, data.password).then((result) => {
-      const newUser = result.user;
-      reset();
-      Swal.fire({
-        position: "top-end",
-        icon: "success",
-        title: "Registration Successful",
-        showConfirmButton: false,
-        timer: 1500,
+    handleRegister(data.email, data.password)
+      .then((result) => {
+        const newUser = result.user;
+        if (newUser) {
+          // Check if user was registered successfully
+          reset();
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Registration Successful",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          navigate("/");
+          console.log(newUser);
+        } else {
+          Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: "Registration Failed",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        }
+      })
+      .catch((error) => {
+        Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: error.message,
+          showConfirmButton: false,
+          timer: 1500,
+        });
       });
-      console.log(newUser);
-    });
   };
+
   return (
     <div
       className="hero min-h-screen bg-cover bg-center"

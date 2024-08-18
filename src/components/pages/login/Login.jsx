@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import img from "../../../assets/img2.webp";
 import { useContext } from "react";
 import { AuthContext } from "../provider/AuthProvider";
@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 
 const Login = () => {
   const { handleLogin } = useContext(AuthContext);
+  const navigate = useNavigate(); // this will retune user to the home page after successful login
   const handleLoginButton = (event) => {
     event.preventDefault();
     const form = event.target;
@@ -23,6 +24,7 @@ const Login = () => {
           timer: 1500,
         });
         form.reset();
+        navigate("/");
         console.log(User);
       })
       .catch((error) => {
